@@ -1,0 +1,12 @@
+[
+  {
+    "path": "./../Magnus/Resume website/Web client/",
+    "type": "react",
+    "port": "3000"
+  },
+  {
+    "path": "./../Magnus/Resume website/API/src/",
+    "type": "node",
+    "port": "3001"
+  }
+]
