@@ -20,6 +20,7 @@ Changing the python script is also an easy option, to provide support for additi
 
 - Python
 - Node.js
+- php
 
 ## Dependencies
 
