@@ -33,7 +33,8 @@ You can install this package using pip:
 
 ### Installation and Setup
 
-1. **Edit the Projects.json file**: Edit Projects.json with the correct information. This information is `path`, `type` and `port`
+1. **Configure installation locations**: Within `start.py`, at the beginning of the run_project function, you need to configure the npm and php paths. In my case it is `C:\\Program Files\\nodejs\\npm.cmd` and `C:\\php\\php 8.3.7\\php.exe`. To find your paths, you can do `where npm` and `where php` on windows. Both npm and php have to be environment variables. On linux and mac, the commands are `which npm` and `which php`.
+2. **Edit the Projects.json file**: Edit Projects.json with the correct information. This information is `path`, `type` and `port`
    - `path` has to go to the folder which your project is started from.
      - For `react` this is the root directory, which is with your `vite.config.ts`, `index.html` and src folder.
      - For `node` it is the location of your `index.js` file.
@@ -43,5 +44,5 @@ You can install this package using pip:
      - For `react`, you can go into your `vite.config.ts` file and edit a few lines. An example can be found within `ViteReactExample.js`, in the `Port examples` folder.
      - For `node` projects, this can vary depending on how you create the project. An example can be found within `ApiNodeExample.js`, in the `Port examples` folder.
      - For `php` projects, the `port` within the json, directly controls the launch port, for the project.
-2. **Run the run.bat file**: Once all the information has been filled out, in the json object, run run.bat. This will launch all the node based projects, specified in the Projects.json file.
-3. **Check the Logs folder**: If there are any errors, when running the program, an error log will be created.
+3. **Run the run.bat file**: Once all the information has been filled out, in the json object, run run.bat. This will launch all the node based projects, specified in the Projects.json file.
+4. **Check the Logs folder**: If there are any errors, when running the program, an error log will be created.
