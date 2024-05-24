@@ -2,6 +2,8 @@ import json
 import os
 import subprocess
 import datetime
+import socket
+import netifaces as ni
 
 def load_projects():
     """Load the project details from the JSON file."""
@@ -24,27 +26,52 @@ def check_ports(projects):
         log_error(str(e))
         raise ValueError
 
+def get_local_ip():
+    """Get the local IP address of the current machine."""
+    # Get the name of the network interface associated with the default gateway (usually 'eth0' or 'wlan0')
+    default_interface = ni.gateways()['default'][ni.AF_INET][1]
+    # Get the IP address associated with the network interface
+    ip_address = ni.ifaddresses(default_interface)[ni.AF_INET][0]['addr']
+    return ip_address
+
 def run_project(project, processes):
     """Run the appropriate command for the project based on its type."""
     try:
         # Define the path to the npm command
         npm_path = 'C:\\Program Files\\nodejs\\npm.cmd'
+        # Define the path to the PHP command
+        php_path = 'C:\\php\\php 8.3.7\\php.exe'
         # Check if the project path exists
         if not os.path.exists(project['path']):
             raise FileNotFoundError(f"Could not find project path {project['path']}")
-        # Depending on the project type, run the appropriate command
-        if project['type'].lower() == 'node':
-            process = subprocess.Popen([npm_path, 'start'], cwd=project['path'], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
-        elif project['type'].lower() == 'react':
-            process = subprocess.Popen([npm_path, 'run', 'dev'], cwd=project['path'], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
-        else:
+
+        # Get the IP address of the current machine
+        ip_address = get_local_ip()
+
+        # Define a dictionary to act as a switch-case structure
+        commands = {
+            'node': [npm_path, 'start'],
+            'react': [npm_path, 'run', 'dev'],
+            'php': [php_path, '-S', f'{ip_address}:' + str(project['port'])]
+        }
+
+        # Get the command based on the project type
+        command = commands.get(project['type'].lower())
+
+        # If the command is None, it means the project type is not supported
+        if command is None:
             raise ValueError(f"Could not start {project['path']} as {project['type']} project")
+
+        # Run the command
+        process = subprocess.Popen(command, cwd=project['path'], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+
         # Add the process to the list of processes
         processes.append(process)
     except Exception as e:
         # Log the error and stop all processes
         log_error(str(e))
         stop_processes(processes)
+
 
 def stop_processes(processes):
     """Stop all processes."""
